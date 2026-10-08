@@ -1,0 +1,15 @@
+plot_name,G,V,canopy_cover,crown_area,forest_type
+Plot_Alpha_01,38,34,78.5,19.2,tropical_moist
+Plot_Alpha_02,42,37,82.0,21.0,tropical_moist
+Plot_Alpha_03,29,27,65.4,16.5,tropical_moist
+Plot_Alpha_04,51,44,88.2,23.4,tropical_moist
+Plot_Beta_05,24,23,58.0,15.1,tropical_moist
+Plot_Beta_06,33,31,71.5,18.0,tropical_moist
+Plot_Beta_07,46,40,84.1,22.8,tropical_moist
+Plot_Gamma_08,19,18,49.3,14.2,tropical_moist
+Plot_Gamma_09,36,33,75.0,18.9,tropical_moist
+Plot_Gamma_10,40,36,79.8,20.4,tropical_moist
+Plot_Delta_11,28,26,62.1,17.1,tropical_moist
+Plot_Delta_12,44,39,83.5,22.0,tropical_moist
+Plot_Delta_13,31,29,69.2,17.8,tropical_moist
+Plot_Delta_14,48,42,86.7,24.1,tropical_moist

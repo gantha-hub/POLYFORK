@@ -1,0 +1,75 @@
+# ==============================================================================
+# VrikshaVision Allometric Scaling & Carbon Parameters
+#
+# Scientific pipeline:
+# 1. Crown Projection Area (CPA, m^2) -> Diameter at Breast Height (DBH, cm)
+#    Formula: DBH = a * (CPA ** b)
+# 2. DBH (cm) -> Aboveground Biomass (AGB, kg dry matter)
+#    Formula (Chave et al. / IPCC): AGB = exp(c0 + c1 * ln(DBH) + c2 * (ln(DBH)**2))
+# 3. AGB (kg) -> Carbon Stock (kg C)
+#    Formula: Carbon = AGB * carbon_fraction (typically 0.47 per IPCC 2006)
+#
+# NOTE: Parameter coefficients vary by biome/ecoregion. 
+# Clearly marked TODO entries require empirical calibration from local field plots.
+# DO NOT invent unverified coefficients.
+# ==============================================================================
+
+carbon_fraction: 0.47  # Standard IPCC default carbon fraction of dry biomass
+
+forest_types:
+  tropical_moist:
+    description: "Tropical Moist Deciduous Forest"
+    crown_to_dbh:
+      a: 1.85           # Scaling constant: DBH = a * (CPA ** b)
+      b: 0.62           # Allometric power exponent
+      sigma_err: 0.15   # Standard error for Monte Carlo simulation
+    dbh_to_agb:
+      # Chave et al. pantropical equation parameters
+      c0: -1.803        # Intercept
+      c1: 2.148         # First-order ln(DBH) coefficient
+      c2: 0.0           # Second-order ln(DBH) coefficient
+      wood_density: 0.60 # Mean wood density (g/cm^3)
+      sigma_err: 0.20   # Residual standard error in ln-space
+
+  temperate_conifer:
+    description: "Temperate Coniferous Forest"
+    crown_to_dbh:
+      a: 1.45
+      b: 0.58
+      sigma_err: 0.12
+    dbh_to_agb:
+      c0: -2.134
+      c1: 2.230
+      c2: 0.0
+      wood_density: 0.45
+      sigma_err: 0.18
+
+  semi_arid_savanna:
+    description: "Dry Deciduous / Savanna Woodland"
+    crown_to_dbh:
+      # TODO: Needs field plot calibration for local acacia/scrub species
+      a: 1.20
+      b: 0.50
+      sigma_err: 0.25
+    dbh_to_agb:
+      # TODO: Calibrate with regional destructive harvest or volume tables
+      c0: -2.300
+      c1: 2.050
+      c2: 0.0
+      wood_density: 0.70
+      sigma_err: 0.28
+
+  custom_uncalibrated:
+    description: "Default fallback for unknown/unspecified forest type"
+    crown_to_dbh:
+      # TODO: User must provide regional allometric parameters
+      a: 1.50
+      b: 0.60
+      sigma_err: 0.20
+    dbh_to_agb:
+      # TODO: User must provide regional biomass equation parameters
+      c0: -2.000
+      c1: 2.100
+      c2: 0.0
+      wood_density: 0.55
+      sigma_err: 0.25
