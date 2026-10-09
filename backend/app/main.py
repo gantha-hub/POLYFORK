@@ -407,9 +407,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       currentMapStyle = style;
 
       if (style === 'dark') {
-        baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-          maxZoom: 22,
-          subdomains: 'abcd'
+        baseLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19
         }).addTo(map);
         document.getElementById('btnDark').className = 'btn primary';
         document.getElementById('btnSat').className = 'btn secondary';
