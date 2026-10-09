@@ -109,6 +109,57 @@ import numpy as np
 
 
 @router.get(
+    "/latest/summary",
+    response_model=ResponseEnvelope[SurveyResultsSummary],
+    dependencies=[Depends(verify_api_key)],
+)
+def get_latest_survey_results(db: Session = Depends(get_db)):
+    """Retrieves full survey results for the most recent active survey with trees."""
+    latest_tree = db.query(Tree).first()
+    if not latest_tree:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No tree records found in database.",
+        )
+    survey = db.query(Survey).filter(Survey.id == latest_tree.survey_id).first()
+    if not survey:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Survey for latest trees not found.",
+        )
+
+    trees = db.query(Tree).filter(Tree.survey_id == survey.id).all()
+    cal_model = (
+        db.query(CalibrationModel)
+        .filter(CalibrationModel.project_id == survey.project_id)
+        .order_by(CalibrationModel.created_at.desc())
+        .first()
+    )
+
+    summary = calculate_survey_metrics(survey, trees, cal_model, include_geojson=True)
+
+    return ResponseEnvelope(
+        success=True,
+        data=summary,
+        data_source=summary.data_source,
+    )
+
+
+@router.get(
+    "/latest/geojson",
+    dependencies=[Depends(verify_api_key)],
+)
+def get_latest_survey_geojson(db: Session = Depends(get_db)):
+    """Returns pure GeoJSON FeatureCollection of all tree crown polygon vectors for the latest survey."""
+    latest_tree = db.query(Tree).first()
+    if not latest_tree:
+        return {"type": "FeatureCollection", "features": []}
+
+    trees = db.query(Tree).filter(Tree.survey_id == latest_tree.survey_id).all()
+    return trees_to_geojson_feature_collection(trees)
+
+
+@router.get(
     "/{survey_id}",
     response_model=ResponseEnvelope[SurveyResultsSummary],
     dependencies=[Depends(verify_api_key)],

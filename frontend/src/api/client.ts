@@ -198,6 +198,12 @@ export const api = {
   getResults: (surveyId: string) =>
     apiRequest<SurveyResultsSummary>(`/results/${surveyId}`),
 
+  getLatestResults: () =>
+    apiRequest<SurveyResultsSummary>('/results/latest/summary'),
+
+  getVectors: () =>
+    apiRequest<any>('/results/latest/geojson'),
+
   queryRegion: (surveyId: string, polygonGeoJSON: unknown) =>
     apiRequest<SurveyResultsSummary>(`/results/${surveyId}/region`, {
       method: 'POST',

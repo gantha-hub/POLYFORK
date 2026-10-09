@@ -51,7 +51,22 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
         const pRes = await api.getProjects();
         setProjects(pRes.data);
         if (pRes.data.length > 0) {
-          setActiveProject(pRes.data[0]);
+          // Smart select: locate the project with real surveys first
+          let projectWithSurveys = pRes.data[0];
+          for (const proj of pRes.data) {
+            try {
+              const sRes = await api.getProjectSurveys(proj.id);
+              if (sRes.data && sRes.data.length > 0) {
+                projectWithSurveys = proj;
+                setSurveys(sRes.data);
+                setActiveSurvey(sRes.data[0]);
+                break;
+              }
+            } catch {
+              // try next project
+            }
+          }
+          setActiveProject(projectWithSurveys);
         }
       } catch (err) {
         console.error('Failed to load projects:', err);
