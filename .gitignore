@@ -34,6 +34,10 @@ backend/data/exports/*
 !backend/data/exports/.gitkeep
 scratch/
 tmp/
+ml_training/dataset/
+ml_training/runs/
+ml_training/models/
+*.pt
 
 # OS and IDE files
 .DS_Store
