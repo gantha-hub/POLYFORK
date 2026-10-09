@@ -54,24 +54,23 @@ def main():
 
     repo = Repo(REPO_DIR)
 
-    print(f"\n[1/3] Staging all files and checking commits...")
+    print(f"\n[1/3] Staging all files and creating commit...")
     try:
         porcelain.add(REPO_DIR, ".")
     except Exception as e:
-        pass
+        print(f"      Add warning: {e}")
 
     try:
-        head_commit = repo.head().decode()
-        print(f"      Current HEAD commit: {head_commit[:8]}")
-    except Exception:
-        # Commit if needed
         commit_sha = porcelain.commit(
             REPO_DIR,
-            message="Deploy VrikshaVision Tree Digital Twin with root index.html and GitHub Pages workflow",
+            message="Upgrade VrikshaVision to professional, map-first, touch-friendly UI (Desktop/Tablet/Mobile)",
             committer=b"Gantha Hub <developer@gantha-hub.org>",
             author=b"Gantha Hub <developer@gantha-hub.org>"
         )
-        print(f"      Created commit: {commit_sha.decode()[:8]}")
+        print(f"      Created new commit: {commit_sha.decode()[:8]}")
+    except Exception as e:
+        head_commit = repo.head().decode()
+        print(f"      Using existing HEAD commit: {head_commit[:8]} ({e})")
 
     print(f"[2/3] Connecting to https://github.com/{GITHUB_REPO}...")
 

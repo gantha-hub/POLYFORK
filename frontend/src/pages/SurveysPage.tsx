@@ -101,7 +101,7 @@ export const SurveysPage: React.FC<SurveysPageProps> = ({ onNavigateToMap }) => 
   };
 
   return (
-    <div style={{ padding: '1.75rem', maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="page-responsive-container">
       {/* Page Title */}
       <div>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
@@ -113,7 +113,7 @@ export const SurveysPage: React.FC<SurveysPageProps> = ({ onNavigateToMap }) => 
       </div>
 
       {/* Grid: Upload Box on Left, Ingestion Pipeline on Right */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(340px, 460px) 1fr', gap: '1.5rem', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '1.5rem', alignItems: 'start' }}>
         {/* Upload Form Card */}
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -235,8 +235,8 @@ export const SurveysPage: React.FC<SurveysPageProps> = ({ onNavigateToMap }) => 
             <button
               type="submit"
               disabled={isUploading || !selectedFile || !activeProject}
-              className="btn btn-primary"
-              style={{ width: '100%', marginTop: '0.5rem' }}
+              className="btn btn-primary touch-target"
+              style={{ width: '100%', marginTop: '0.5rem', height: 44, minHeight: 44 }}
             >
               {isUploading ? 'Executing Ingestion Pipeline...' : 'Upload & Process Stand'}
             </button>
@@ -402,11 +402,11 @@ export const SurveysPage: React.FC<SurveysPageProps> = ({ onNavigateToMap }) => 
                             setActiveSurvey(survey);
                             onNavigateToMap();
                           }}
-                          className={`btn btn-sm ${isActive ? 'btn-primary' : 'btn-secondary'}`}
-                          style={{ gap: '0.35rem' }}
+                          className={`btn touch-target ${isActive ? 'btn-primary' : 'btn-secondary'}`}
+                          style={{ gap: '0.4rem', height: 38, minHeight: 38, padding: '0 0.8rem', fontSize: '0.8rem' }}
                         >
                           <span>{isActive ? 'Current Active' : 'Inspect Map'}</span>
-                          <ArrowRight size={13} />
+                          <ArrowRight size={14} />
                         </button>
                       </td>
                     </tr>

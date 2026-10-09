@@ -28,6 +28,10 @@ data/uploads/*
 !data/uploads/.gitkeep
 data/exports/*
 !data/exports/.gitkeep
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+backend/data/exports/*
+!backend/data/exports/.gitkeep
 scratch/
 tmp/
 

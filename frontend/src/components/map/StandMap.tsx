@@ -32,16 +32,17 @@ export const StandMap: React.FC<StandMapProps> = ({
         zoom: 17,
         zoomControl: false,
         attributionControl: false,
+        preferCanvas: true, // Hardware accelerated canvas rendering for smooth touch panning
       });
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-      // Default dark basemap
+      // Default dark basemap (Zero-key ESRI World Dark Gray Canvas)
       const darkLayer = L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
         {
-          maxZoom: 22,
-          subdomains: 'abcd',
+          maxZoom: 19,
+          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
         }
       ).addTo(map);
 
@@ -206,38 +207,29 @@ export const StandMap: React.FC<StandMapProps> = ({
       />
 
       {/* Floating Controls Bar */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '1rem',
-          left: '1rem',
-          zIndex: 900,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}
-      >
+      <div className="map-controls-overlay">
         {/* Basemap Toggle */}
         <div
           className="glass-card"
           style={{
             display: 'flex',
-            padding: '0.25rem',
-            background: 'rgba(9, 15, 12, 0.88)',
+            padding: '0.2rem',
+            background: 'rgba(9, 15, 12, 0.92)',
             border: '1px solid var(--border-card)',
+            borderRadius: 'var(--radius-md)',
           }}
         >
           <button
             onClick={() => setMapStyle('dark')}
-            className={`btn btn-sm ${mapStyle === 'dark' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '0.25rem 0.6rem', fontSize: '0.75rem', height: 28 }}
+            className={`btn touch-target ${mapStyle === 'dark' ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', height: 34, minHeight: 34 }}
           >
             Dark Vector
           </button>
           <button
             onClick={() => setMapStyle('satellite')}
-            className={`btn btn-sm ${mapStyle === 'satellite' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '0.25rem 0.6rem', fontSize: '0.75rem', height: 28 }}
+            className={`btn touch-target ${mapStyle === 'satellite' ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', height: 34, minHeight: 34 }}
           >
             Satellite
           </button>
@@ -250,12 +242,14 @@ export const StandMap: React.FC<StandMapProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: '0.35rem',
-            padding: '0.25rem 0.5rem',
-            background: 'rgba(9, 15, 12, 0.88)',
+            padding: '0.2rem 0.5rem',
+            background: 'rgba(9, 15, 12, 0.92)',
             border: '1px solid var(--border-card)',
+            borderRadius: 'var(--radius-md)',
+            height: 38,
           }}
         >
-          <Sparkles size={14} color="var(--emerald-400)" />
+          <Sparkles size={15} color="var(--emerald-400)" />
           <select
             aria-label="Canopy Color Scheme"
             className="input-field"
@@ -264,10 +258,10 @@ export const StandMap: React.FC<StandMapProps> = ({
             style={{
               padding: '0.2rem 1.6rem 0.2rem 0.5rem',
               fontSize: '0.75rem',
-              height: 28,
+              height: 32,
               background: 'transparent',
               border: 'none',
-              width: 130,
+              width: 140,
             }}
           >
             <option value="carbon">Color: Carbon Stock</option>
@@ -278,46 +272,44 @@ export const StandMap: React.FC<StandMapProps> = ({
         {/* Fit Bounds Button */}
         <button
           onClick={handleZoomToFit}
-          className="btn btn-secondary btn-sm"
+          className="btn btn-secondary touch-target"
           title="Zoom to Fit Stand Extents"
           style={{
-            height: 34,
-            padding: '0 0.6rem',
-            background: 'rgba(9, 15, 12, 0.88)',
+            height: 38,
+            minHeight: 38,
+            padding: '0 0.75rem',
+            background: 'rgba(9, 15, 12, 0.92)',
             borderColor: 'var(--border-card)',
+            borderRadius: 'var(--radius-md)',
           }}
         >
-          <Maximize2 size={14} />
+          <Maximize2 size={15} />
           <span style={{ fontSize: '0.75rem' }}>Fit Stand</span>
         </button>
-      </div>
 
-      {/* Canopy Statistics Badge Overlay */}
-      {geojson && (
-        <div
-          className="glass-card font-mono"
-          style={{
-            position: 'absolute',
-            bottom: '1rem',
-            left: '1rem',
-            zIndex: 900,
-            padding: '0.45rem 0.75rem',
-            fontSize: '0.75rem',
-            background: 'rgba(9, 15, 12, 0.9)',
-            border: '1px solid var(--border-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-          }}
-        >
-          <Eye size={13} color="var(--emerald-400)" />
-          <span style={{ color: 'var(--text-secondary)' }}>
-            Showing{' '}
-            <strong style={{ color: '#ffffff' }}>{geojson.features.length}</strong>{' '}
-            canopy crowns
-          </span>
-        </div>
-      )}
+        {/* Canopy Statistics Badge */}
+        {geojson && (
+          <div
+            className="glass-card font-mono"
+            style={{
+              padding: '0.35rem 0.65rem',
+              fontSize: '0.75rem',
+              background: 'rgba(9, 15, 12, 0.92)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              height: 38,
+            }}
+          >
+            <Eye size={14} color="var(--emerald-400)" />
+            <span style={{ color: 'var(--text-secondary)' }}>
+              <strong style={{ color: '#ffffff' }}>{geojson.features.length}</strong> crowns
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

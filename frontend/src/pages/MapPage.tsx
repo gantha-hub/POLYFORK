@@ -14,6 +14,8 @@ import {
   AlertCircle,
   Loader2,
   UploadCloud,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 interface MapPageProps {
@@ -26,6 +28,9 @@ export const MapPage: React.FC<MapPageProps> = ({ onNavigateToSurveys }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedTree, setSelectedTree] = useState<GeoJSONFeatureProperties | null>(null);
+  const [isMetricsExpanded, setIsMetricsExpanded] = useState<boolean>(() => {
+    return typeof window !== 'undefined' && window.innerWidth > 1024;
+  });
 
   useEffect(() => {
     if (!activeSurvey) {
@@ -135,93 +140,156 @@ export const MapPage: React.FC<MapPageProps> = ({ onNavigateToSurveys }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', position: 'relative' }}>
-      {/* Top Stand Summary KPIs */}
-      <div
-        style={{
-          background: 'rgba(9, 15, 12, 0.95)',
-          borderBottom: '1px solid var(--border-subtle)',
-          padding: '0.75rem 1.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem',
-          zIndex: 10,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-              {activeSurvey.original_filename}
-            </h1>
-            <Badge variant="default" label={activeSurvey.forest_type.toUpperCase()} />
-            {results && (
-              <Badge
-                variant={results.data_source === 'synthetic' ? 'synthetic' : 'real'}
-                label={results.data_source === 'synthetic' ? 'Synthetic Demo Stand' : 'Real Model Inferences'}
-              />
-            )}
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Badge
-              variant={calibration?.calibrated ? 'calibrated' : 'uncalibrated'}
-              label={calibration?.calibrated ? 'Calibrated Allometry' : 'Raw Uncalibrated'}
-            />
-          </div>
-        </div>
-
-        {/* Metric Cards Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
-          <StatCard
-            title="Total Stand Trees"
-            value={results ? results.count.calibrated_count : '—'}
-            unit="trees"
-            interval={
-              results && results.count.interval
-                ? {
-                    low: results.count.interval.low,
-                    high: results.count.interval.high,
-                    confidenceLevel: results.count.interval.confidence_level,
-                  }
-                : undefined
-            }
-            icon={<Trees size={18} />}
-          />
-
-          <StatCard
-            title="Total Carbon Stock"
-            value={results ? results.carbon.mean_carbon_tonnes.toFixed(2) : '—'}
-            unit="t CO₂e"
-            interval={
-              results && results.carbon.interval_tonnes
-                ? {
-                    low: results.carbon.interval_tonnes.low,
-                    high: results.carbon.interval_tonnes.high,
-                    confidenceLevel: results.carbon.interval_tonnes.confidence_level,
-                  }
-                : undefined
-            }
-            icon={<Flame size={18} />}
-            accentColor="var(--emerald-400)"
-          />
-
-          <StatCard
-            title="Mean Crown Area"
-            value={results ? results.mean_crown_area_sqm.toFixed(1) : '—'}
-            unit="m²"
-            icon={<Ruler size={18} />}
-          />
-
-          <StatCard
-            title="Mean Stand DBH"
-            value={results ? results.mean_dbh_cm.toFixed(1) : '—'}
-            unit="cm"
-            icon={<Trees size={18} />}
-          />
-        </div>
-      </div>
-
       {/* Main Map Viewport & Drawer */}
       <div style={{ flex: 1, position: 'relative', width: '100%', height: '100%', minHeight: 0 }}>
+        {/* Floating Glassmorphic Telemetry HUD */}
+        <div className="map-floating-hud">
+          <div
+            className="glass-card"
+            style={{
+              padding: '0.65rem 1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+              background: 'rgba(9, 15, 12, 0.92)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid var(--border-card)',
+              boxShadow: 'var(--shadow-lg)',
+              borderRadius: 'var(--radius-lg)',
+              maxWidth: isMetricsExpanded ? 880 : 640,
+              width: '100%',
+              transition: 'all 0.25s ease',
+            }}
+          >
+            {/* Top row: Survey Title + Badges + Toggle */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <h1 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                  {activeSurvey.original_filename}
+                </h1>
+                <Badge variant="default" label={activeSurvey.forest_type.toUpperCase()} />
+                {results && (
+                  <Badge
+                    variant={results.data_source === 'synthetic' ? 'synthetic' : 'real'}
+                    label={results.data_source === 'synthetic' ? 'Synthetic Demo' : 'Real Model'}
+                  />
+                )}
+                <Badge
+                  variant={calibration?.calibrated ? 'calibrated' : 'uncalibrated'}
+                  label={calibration?.calibrated ? 'Calibrated' : 'Raw'}
+                />
+
+                {/* Quick glance chips when collapsed */}
+                {results && !isMetricsExpanded && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginLeft: '0.25rem' }}>
+                    <span
+                      className="font-mono"
+                      style={{
+                        fontSize: '0.725rem',
+                        padding: '0.15rem 0.45rem',
+                        borderRadius: 'var(--radius-pill)',
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        border: '1px solid rgba(16, 185, 129, 0.25)',
+                        color: 'var(--emerald-400)',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {results.count.calibrated_count} trees
+                    </span>
+                    <span
+                      className="font-mono"
+                      style={{
+                        fontSize: '0.725rem',
+                        padding: '0.15rem 0.45rem',
+                        borderRadius: 'var(--radius-pill)',
+                        background: 'rgba(56, 189, 248, 0.1)',
+                        border: '1px solid rgba(56, 189, 248, 0.25)',
+                        color: '#38bdf8',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {results.carbon.mean_carbon_tonnes.toFixed(1)} t CO₂e
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Toggle Expand/Collapse */}
+              <button
+                onClick={() => setIsMetricsExpanded(!isMetricsExpanded)}
+                className="btn btn-secondary touch-target"
+                style={{
+                  height: 36,
+                  padding: '0 0.65rem',
+                  fontSize: '0.75rem',
+                  borderRadius: 'var(--radius-md)',
+                  gap: '0.35rem',
+                }}
+                aria-label={isMetricsExpanded ? 'Collapse stand metrics' : 'Expand stand metrics'}
+              >
+                <span>{isMetricsExpanded ? 'Hide KPIs' : 'Metrics'}</span>
+                {isMetricsExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              </button>
+            </div>
+
+            {/* Expanded Metrics Grid */}
+            {isMetricsExpanded && (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                  gap: '0.6rem',
+                  marginTop: '0.25rem',
+                }}
+              >
+                <StatCard
+                  title="Total Stand Trees"
+                  value={results ? results.count.calibrated_count : '—'}
+                  unit="trees"
+                  interval={
+                    results && results.count.interval
+                      ? {
+                          low: results.count.interval.low,
+                          high: results.count.interval.high,
+                          confidenceLevel: results.count.interval.confidence_level,
+                        }
+                      : undefined
+                  }
+                  icon={<Trees size={16} />}
+                />
+                <StatCard
+                  title="Total Carbon Stock"
+                  value={results ? results.carbon.mean_carbon_tonnes.toFixed(2) : '—'}
+                  unit="t CO₂e"
+                  interval={
+                    results && results.carbon.interval_tonnes
+                      ? {
+                          low: results.carbon.interval_tonnes.low,
+                          high: results.carbon.interval_tonnes.high,
+                          confidenceLevel: results.carbon.interval_tonnes.confidence_level,
+                        }
+                      : undefined
+                  }
+                  icon={<Flame size={16} />}
+                  accentColor="var(--emerald-400)"
+                />
+                <StatCard
+                  title="Mean Crown Area"
+                  value={results ? results.mean_crown_area_sqm.toFixed(1) : '—'}
+                  unit="m²"
+                  icon={<Ruler size={16} />}
+                />
+                <StatCard
+                  title="Mean Stand DBH"
+                  value={results ? results.mean_dbh_cm.toFixed(1) : '—'}
+                  unit="cm"
+                  icon={<Trees size={16} />}
+                />
+              </div>
+            )}
+          </div>
+        </div>
         {loading ? (
           <div
             style={{

@@ -237,3 +237,183 @@ select.input-field {
   70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
 }
+
+/* ==========================================================================
+   RESPONSIVE & TOUCH UTILITIES
+   ========================================================================== */
+
+.touch-target {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .full-width-mobile {
+    width: 100% !important;
+  }
+  .stack-on-mobile {
+    flex-direction: column !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+}
+
+/* Touch Leaflet Map Optimization */
+.leaflet-container {
+  touch-action: pan-x pan-y;
+  font-family: var(--font-sans);
+  background-color: #060a08 !important;
+}
+
+.leaflet-bar {
+  border: 1px solid var(--border-card) !important;
+  box-shadow: var(--shadow-md) !important;
+  border-radius: var(--radius-md) !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a {
+  background-color: rgba(9, 15, 12, 0.92) !important;
+  color: var(--emerald-400) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: rgba(22, 38, 30, 0.95) !important;
+  color: #ffffff !important;
+}
+
+/* Floating Map HUD */
+.map-floating-hud {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 500;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.map-floating-hud > * {
+  pointer-events: auto;
+}
+
+/* Floating Map Controls */
+.map-controls-overlay {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 450;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Responsive Tree Detail Inspector / Drawer */
+.tree-drawer {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  width: 360px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  background: rgba(9, 15, 12, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-focus);
+  border-radius: var(--radius-lg);
+  overflow-y: auto;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sheet-drag-handle {
+  display: none;
+  width: 44px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 auto 0.75rem auto;
+}
+
+@media (max-width: 768px) {
+  .map-floating-hud {
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .map-controls-overlay {
+    bottom: calc(var(--bottom-nav-height, 64px) + 0.75rem);
+    left: 0.5rem;
+    right: 0.5rem;
+    gap: 0.35rem;
+  }
+
+  .tree-drawer {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 75vh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid var(--border-focus);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+    padding: 0.85rem 1.25rem;
+    padding-bottom: calc(var(--bottom-nav-height, 64px) + 1.25rem + env(safe-area-inset-bottom, 0px));
+    z-index: 1100;
+  }
+
+  .sheet-drag-handle {
+    display: block;
+  }
+
+  main {
+    padding-bottom: calc(var(--bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Page Containers */
+.page-responsive-container {
+  padding: 1.75rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .page-responsive-container {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+}
+
+

@@ -35,6 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
 
   return (
     <aside
+      className="hide-on-mobile"
       style={{
         width: 250,
         minWidth: 250,

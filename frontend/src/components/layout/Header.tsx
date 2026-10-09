@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useProject } from '../../context/ProjectContext';
 import { api } from '../../api/client';
 import { Modal } from '../common/Modal';
-import { TreePine, Plus, Activity, Layers, FolderKanban } from 'lucide-react';
+import { TreePine, Plus, Layers, FolderKanban } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const {
@@ -104,95 +104,119 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Global Project & Survey Switchers */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          {/* Project Picker */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <FolderKanban size={15} style={{ color: 'var(--text-muted)' }} />
-            <select
-              aria-label="Active Forestry Project"
-              className="input-field"
-              style={{
-                width: 200,
-                padding: '0.35rem 0.75rem',
-                fontSize: '0.8rem',
-                height: 34,
-              }}
-              value={activeProject?.id || ''}
-              onChange={(e) => {
-                const found = projects.find((p) => p.id === e.target.value);
-                if (found) setActiveProject(found);
-              }}
-            >
-              {projects.length === 0 ? (
-                <option value="">No projects found</option>
-              ) : (
-                projects.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))
-              )}
-            </select>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          {/* Desktop Selectors (hidden on mobile) */}
+          <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Project Picker */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <FolderKanban size={15} style={{ color: 'var(--text-muted)' }} />
+              <select
+                aria-label="Active Forestry Project"
+                className="input-field"
+                style={{
+                  width: 180,
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.8rem',
+                  height: 34,
+                }}
+                value={activeProject?.id || ''}
+                onChange={(e) => {
+                  const found = projects.find((p) => p.id === e.target.value);
+                  if (found) setActiveProject(found);
+                }}
+              >
+                {projects.length === 0 ? (
+                  <option value="">No projects found</option>
+                ) : (
+                  projects.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))
+                )}
+              </select>
 
-            <button
-              onClick={() => setIsNewProjectModalOpen(true)}
-              className="btn btn-secondary btn-sm"
-              title="Create new forestry project"
-              style={{ height: 34, padding: '0 0.6rem' }}
-            >
-              <Plus size={14} />
-            </button>
+              <button
+                onClick={() => setIsNewProjectModalOpen(true)}
+                className="btn btn-secondary btn-sm"
+                title="Create new forestry project"
+                style={{ height: 34, padding: '0 0.6rem' }}
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+
+            {/* Active Survey Selector */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Layers size={15} style={{ color: 'var(--text-muted)' }} />
+              <select
+                aria-label="Active Aerial Survey"
+                className="input-field"
+                style={{
+                  width: 200,
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.8rem',
+                  height: 34,
+                }}
+                value={activeSurvey?.id || ''}
+                onChange={(e) => {
+                  const found = surveys.find((s) => s.id === e.target.value);
+                  if (found) setActiveSurvey(found);
+                }}
+                disabled={surveys.length === 0}
+              >
+                {surveys.length === 0 ? (
+                  <option value="">No surveys uploaded</option>
+                ) : (
+                  surveys.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.original_filename} ({s.forest_type})
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
           </div>
 
-          {/* Active Survey Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Layers size={15} style={{ color: 'var(--text-muted)' }} />
-            <select
-              aria-label="Active Aerial Survey"
-              className="input-field"
-              style={{
-                width: 220,
-                padding: '0.35rem 0.75rem',
-                fontSize: '0.8rem',
-                height: 34,
-              }}
-              value={activeSurvey?.id || ''}
-              onChange={(e) => {
-                const found = surveys.find((s) => s.id === e.target.value);
-                if (found) setActiveSurvey(found);
-              }}
-              disabled={surveys.length === 0}
-            >
-              {surveys.length === 0 ? (
-                <option value="">No surveys uploaded</option>
-              ) : (
-                surveys.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.original_filename} ({s.forest_type})
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
+          {/* Mobile Compact Project/Survey Pill (shown only on mobile) */}
+          <button
+            onClick={() => setIsNewProjectModalOpen(true)}
+            className="hide-on-desktop touch-target"
+            style={{
+              padding: '0.3rem 0.65rem',
+              borderRadius: 'var(--radius-pill)',
+              background: 'rgba(16, 185, 129, 0.12)',
+              border: '1px solid var(--border-card)',
+              color: 'var(--emerald-400)',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              gap: '0.35rem',
+              cursor: 'pointer',
+            }}
+          >
+            <FolderKanban size={13} />
+            <span style={{ maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {activeProject ? activeProject.name : 'Select Stand'}
+            </span>
+          </button>
 
           {/* Backend Diagnostics Pill */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.35rem 0.75rem',
+              gap: '0.45rem',
+              padding: '0.3rem 0.65rem',
               borderRadius: 'var(--radius-pill)',
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid var(--border-subtle)',
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
             }}
           >
             <span className="pulse-indicator" style={{ backgroundColor: health ? 'var(--emerald-400)' : '#ef4444' }} />
             <span style={{ color: health ? 'var(--text-secondary)' : '#f87171', fontWeight: 600 }}>
-              {health ? (health.model_backend === 'mock' ? 'MOCK MODEL' : 'TORCH GPU') : 'OFFLINE'}
+              {health ? (health.model_backend === 'mock' ? 'MOCK' : 'GPU') : 'OFFLINE'}
             </span>
-            <Activity size={12} style={{ color: 'var(--text-muted)' }} />
           </div>
         </div>
       </header>

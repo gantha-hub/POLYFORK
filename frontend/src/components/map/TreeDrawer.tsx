@@ -49,43 +49,43 @@ export const TreeDrawer: React.FC<TreeDrawerProps> = ({
   };
 
   return (
-    <aside
-      className="glass-card"
-      style={{
-        position: 'absolute',
-        top: '1rem',
-        right: '1rem',
-        bottom: '1rem',
-        width: 340,
-        zIndex: 1000,
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '1.25rem',
-        background: 'rgba(9, 15, 12, 0.94)',
-        boxShadow: 'var(--shadow-lg)',
-        border: '1px solid var(--border-focus)',
-        overflowY: 'auto',
-      }}
-    >
+    <aside className="tree-drawer">
+      {/* Mobile Bottom Sheet Pull Handle */}
+      <div className="sheet-drag-handle" />
+
       {/* Header with Title and Close Button */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <TreePine size={20} color="var(--emerald-400)" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 'var(--radius-md)',
+              background: 'rgba(16, 185, 129, 0.12)',
+              border: '1px solid rgba(16, 185, 129, 0.25)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <TreePine size={22} color="var(--emerald-400)" />
+          </div>
           <div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
               Tree #{tree.tree_id.slice(-6)}
             </h3>
-            <span className="font-mono" style={{ fontSize: '0.675rem', color: 'var(--text-muted)' }}>
+            <span className="font-mono" style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
               {tree.tree_id}
             </span>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="btn btn-secondary btn-sm"
-          style={{ padding: '0.3rem', height: 28, width: 28, borderRadius: '50%' }}
+          aria-label="Close inspector"
+          className="btn btn-secondary touch-target"
+          style={{ width: 44, height: 44, padding: 0, borderRadius: '50%' }}
         >
-          <X size={15} />
+          <X size={18} />
         </button>
       </div>
 
@@ -234,23 +234,23 @@ export const TreeDrawer: React.FC<TreeDrawerProps> = ({
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
           <button
             onClick={() => handleAction('accept')}
             disabled={isVerifying || tree.status === 'verified'}
-            className="btn btn-primary btn-sm"
-            style={{ gap: '0.35rem' }}
+            className="btn btn-primary touch-target"
+            style={{ height: 44, minHeight: 44, fontSize: '0.875rem', gap: '0.5rem' }}
           >
-            <CheckCircle size={14} />
+            <CheckCircle size={18} />
             <span>Approve</span>
           </button>
           <button
             onClick={() => handleAction('reject')}
             disabled={isVerifying || tree.status === 'rejected'}
-            className="btn btn-danger btn-sm"
-            style={{ gap: '0.35rem' }}
+            className="btn btn-danger touch-target"
+            style={{ height: 44, minHeight: 44, fontSize: '0.875rem', gap: '0.5rem' }}
           >
-            <XCircle size={14} />
+            <XCircle size={18} />
             <span>Reject</span>
           </button>
         </div>

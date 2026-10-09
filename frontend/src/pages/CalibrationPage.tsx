@@ -90,7 +90,7 @@ export const CalibrationPage: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '1.75rem', maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="page-responsive-container">
       {/* Page Header */}
       <div>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
@@ -239,7 +239,7 @@ export const CalibrationPage: React.FC = () => {
       )}
 
       {/* Two Column Actions: Upload Plots & Fit Calibration */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '1.5rem' }}>
         {/* Step 1: Upload Field Plots */}
         <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -301,8 +301,8 @@ export const CalibrationPage: React.FC = () => {
             <button
               type="submit"
               disabled={isUploadingPlots || !selectedCsv}
-              className="btn btn-secondary"
-              style={{ width: '100%' }}
+              className="btn btn-secondary touch-target"
+              style={{ width: '100%', height: 44, minHeight: 44 }}
             >
               {isUploadingPlots ? 'Uploading Plots...' : 'Upload Ground Plots'}
             </button>
@@ -368,8 +368,8 @@ export const CalibrationPage: React.FC = () => {
             <button
               onClick={handleFitCalibration}
               disabled={isFitting || !activeProject}
-              className="btn btn-primary"
-              style={{ width: '100%' }}
+              className="btn btn-primary touch-target"
+              style={{ width: '100%', height: 44, minHeight: 44 }}
             >
               {isFitting ? 'Fitting Allometry & Bounds...' : 'Fit Conformal Calibration'}
             </button>

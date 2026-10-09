@@ -89,7 +89,7 @@ export const VerifyPage: React.FC = () => {
   }
 
   return (
-    <div style={{ padding: '1.75rem', maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="page-responsive-container">
       {/* Page Header */}
       <div>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
@@ -176,7 +176,7 @@ export const VerifyPage: React.FC = () => {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.25rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '1.25rem' }}>
         {queue.map((item) => {
           const isDone = item.status === 'verified' || item.status === 'rejected' || item.status === 'edited';
           return (
@@ -261,20 +261,20 @@ export const VerifyPage: React.FC = () => {
                 <button
                   onClick={() => handleAction(item.tree_id, 'accept')}
                   disabled={submittingAction === item.tree_id || item.status === 'verified'}
-                  className="btn btn-primary btn-sm"
-                  style={{ gap: '0.3rem' }}
+                  className="btn btn-primary touch-target"
+                  style={{ gap: '0.35rem', height: 38, minHeight: 38, fontSize: '0.8rem' }}
                 >
-                  <CheckCircle size={14} />
+                  <CheckCircle size={15} />
                   <span>Approve</span>
                 </button>
 
                 <button
                   onClick={() => handleAction(item.tree_id, 'reject')}
                   disabled={submittingAction === item.tree_id || item.status === 'rejected'}
-                  className="btn btn-danger btn-sm"
-                  style={{ gap: '0.3rem' }}
+                  className="btn btn-danger touch-target"
+                  style={{ gap: '0.35rem', height: 38, minHeight: 38, fontSize: '0.8rem' }}
                 >
-                  <XCircle size={14} />
+                  <XCircle size={15} />
                   <span>Reject</span>
                 </button>
 
@@ -283,11 +283,12 @@ export const VerifyPage: React.FC = () => {
                     setEditingTree(item);
                     setEditNotes('');
                   }}
-                  className="btn btn-secondary btn-sm"
+                  className="btn btn-secondary touch-target"
                   title="Edit notes / attributes"
-                  style={{ padding: '0 0.6rem' }}
+                  aria-label="Edit audit notes"
+                  style={{ width: 38, height: 38, minHeight: 38, padding: 0 }}
                 >
-                  <Edit3 size={14} />
+                  <Edit3 size={15} />
                 </button>
               </div>
             </div>
