@@ -50,11 +50,18 @@ python train_yolo.py 5
 ```
 *(The number `5` specifies the number of training epochs. Increase to `30-50` for production).*
 
-### 4. Test Real-Time Inference
+### 4. Test Real-Time Inference on a Single Tile
 Runs the newly trained model on validation tiles and outputs detected tree coordinates and confidence scores:
 ```powershell
 python infer_yolo.py
 ```
+
+### 5. Run Full Orthomosaic Tiling & Export GeoJSON Digital Twin
+Runs windowed sliding tiling across an entire aerial GeoTIFF drone survey, performs Non-Maximum Suppression (NMS), computes tree crown area, DBH, and carbon stock, and outputs a standard GIS GeoJSON:
+```powershell
+python predict_orthomosaic.py ..\backend\data\demo_aerial_tile.tif
+```
+*(The output GeoJSON file is saved to `ml_training\outputs\predicted_stand.geojson` ready to be visualized directly on the map).*
 
 ---
 

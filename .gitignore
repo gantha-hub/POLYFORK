@@ -37,6 +37,7 @@ tmp/
 ml_training/dataset/
 ml_training/runs/
 ml_training/models/
+ml_training/outputs/
 *.pt
 
 # OS and IDE files
